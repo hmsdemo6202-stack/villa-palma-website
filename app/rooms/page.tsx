@@ -6,6 +6,17 @@ import Footer from '@/components/Footer'
 
 const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
 
+const ROOM_IMAGES: Record<string, string> = {
+  Single:   'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80',
+  Double:   'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80',
+  Twin:     'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80',
+  Triple:   'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=600&q=80',
+  Quadroom: 'https://images.unsplash.com/photo-1568495248636-6432b97bd949?auto=format&fit=crop&w=600&q=80',
+  Executive:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80',
+}
+
+const FALLBACK = 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80'
+
 interface RoomType {
   id: string
   name: string
@@ -145,7 +156,7 @@ export default function RoomsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="bg-white rounded-2xl border border-warm-border overflow-hidden animate-pulse">
-                  <div className="h-40 bg-cream-dark" />
+                  <div className="h-48 bg-cream-dark" />
                   <div className="p-5 space-y-3">
                     <div className="h-4 bg-cream-dark rounded w-3/4" />
                     <div className="h-3 bg-cream-dark rounded w-1/2" />
@@ -166,9 +177,13 @@ export default function RoomsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {rooms.map(room => (
                 <div key={room.id} className="bg-white rounded-2xl border border-warm-border overflow-hidden hover:border-terra transition-colors group">
-                  {/* Placeholder image area */}
-                  <div className="h-40 bg-gradient-to-br from-[#2d1c14] to-[#7a5c4f] flex items-end p-4">
-                    <span className="text-xs text-[#c8a898] bg-[#00000040] px-2 py-1 rounded-full">
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={ROOM_IMAGES[room.room_types.name] ?? FALLBACK}
+                      alt={room.room_types.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="absolute bottom-3 left-3 text-xs text-white bg-[#00000055] backdrop-blur-sm px-2 py-1 rounded-full">
                       Floor {room.floor}
                     </span>
                   </div>

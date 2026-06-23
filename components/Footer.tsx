@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
-            <p className="font-serif text-sm tracking-[0.2em] text-[#f0e0d0] uppercase font-bold mb-3">Villa Palma</p>
+            <p className="font-serif text-sm tracking-[0.2em] text-[#f0e0d0] uppercase font-bold mb-3">Cabalum Hotel</p>
             <p className="text-sm leading-relaxed">A boutique hotel experience crafted for those who appreciate the finer things.</p>
           </div>
 
@@ -28,10 +28,10 @@ export default function Footer() {
           <div>
             <p className="text-xs uppercase tracking-widest text-[#5a3a2a] mb-3 font-medium">Contact</p>
             <ul className="space-y-2 text-sm">
-              <li>123 Palma Street, Makati City</li>
+              <li>123 Cabalum Street, Makati City</li>
               <li>Metro Manila, Philippines</li>
               <li className="pt-1">
-                <a href="mailto:hello@villapalma.ph" className="hover:text-[#c8a898] transition-colors">hello@villapalma.ph</a>
+                <a href="mailto:hello@cabalumhotel.ph" className="hover:text-[#c8a898] transition-colors">hello@cabalumhotel.ph</a>
               </li>
               <li>+63 2 8888 0000</li>
             </ul>
@@ -39,7 +39,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-6 border-t border-[#3d2418] flex flex-col md:flex-row justify-between items-center gap-3 text-xs">
-          <p>&copy; {new Date().getFullYear()} Villa Palma. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Cabalum Hotel. All rights reserved.</p>
           <div className="flex gap-5">
             <a href={`${PORTAL_URL}/login`} className="hover:text-[#c8a898] transition-colors">Guest Portal</a>
             <span>·</span>

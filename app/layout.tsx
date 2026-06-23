@@ -14,8 +14,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Villa Palma | Boutique Hotel",
-  description: "Experience boutique hospitality at Villa Palma. Browse our luxury rooms, reserve a table, and book your stay.",
+  title: "Cabalum Hotel",
+  description: "Experience boutique hospitality at Cabalum Hotel. Browse our luxury rooms, reserve a table, and book your stay.",
 };
 
 export default function RootLayout({

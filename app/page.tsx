@@ -6,6 +6,17 @@ import Link from 'next/link'
 
 const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
 
+const ROOM_IMAGES: Record<string, string> = {
+  Single:   'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80',
+  Double:   'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80',
+  Twin:     'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80',
+  Triple:   'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=600&q=80',
+  Quadroom: 'https://images.unsplash.com/photo-1568495248636-6432b97bd949?auto=format&fit=crop&w=600&q=80',
+  Executive:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80',
+}
+
+const FALLBACK = 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80'
+
 interface RoomType {
   id: string
   name: string
@@ -21,7 +32,7 @@ async function getFeaturedRoomTypes(): Promise<RoomType[]> {
       .from('room_types')
       .select('id, name, description, price_per_night, max_guests')
       .order('price_per_night')
-      .limit(3)
+      .limit(6)
     return (data as RoomType[]) ?? []
   } catch {
     return []
@@ -42,7 +53,7 @@ export default async function HomePage() {
 
         <div className="relative text-center px-6 py-24">
           <p className="text-xs uppercase tracking-[0.3em] text-[#8a6a5a] mb-6">Boutique Hotel · Manila</p>
-          <h1 className="font-serif text-6xl md:text-8xl text-[#f0e0d0] mb-6 leading-tight">Villa Palma</h1>
+          <h1 className="font-serif text-6xl md:text-8xl text-[#f0e0d0] mb-6 leading-tight">Cabalum Hotel</h1>
           <div className="w-16 h-px bg-terra mx-auto mb-6" />
           <p className="text-[#9d8075] text-lg max-w-md mx-auto mb-10 leading-relaxed">
             Where every stay becomes a story worth telling. Experience boutique hospitality reimagined.
@@ -64,8 +75,8 @@ export default async function HomePage() {
       <section className="bg-[#f5ede4] border-y border-warm-border">
         <div className="max-w-4xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { value: '24', label: 'Boutique Rooms' },
-            { value: '3', label: 'Room Categories' },
+            { value: '20', label: 'Boutique Rooms' },
+            { value: '6', label: 'Room Categories' },
             { value: '₱2,500', label: 'Starting Rate' },
             { value: '5★', label: 'Guest Rating' },
           ].map(s => (
@@ -90,8 +101,12 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {roomTypes.map(rt => (
                 <div key={rt.id} className="bg-white rounded-2xl border border-warm-border overflow-hidden group hover:border-terra transition-colors">
-                  <div className="h-44 bg-gradient-to-br from-[#2d1c14] to-[#7a5c4f] flex items-center justify-center">
-                    <p className="font-serif text-2xl text-[#c8a898] opacity-40">{rt.name[0]}</p>
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={ROOM_IMAGES[rt.name] ?? FALLBACK}
+                      alt={rt.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-2">
@@ -129,7 +144,7 @@ export default async function HomePage() {
       <section id="experience" className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs uppercase tracking-widest text-terra mb-2">The Villa Palma Experience</p>
+            <p className="text-xs uppercase tracking-widest text-terra mb-2">The Cabalum Hotel Experience</p>
             <h2 className="font-serif text-4xl text-brown">More Than a Stay</h2>
             <div className="w-10 h-px bg-terra mx-auto mt-4" />
           </div>

@@ -12,7 +12,7 @@ export default function SiteNav() {
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between py-4">
         {/* Logo */}
         <Link href="/" className="font-serif text-sm tracking-[0.2em] text-[#f0e0d0] uppercase font-bold hover:text-white transition-colors">
-          Villa Palma
+          Cabalum Hotel
         </Link>
 
         {/* Desktop nav */}
