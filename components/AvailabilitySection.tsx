@@ -8,8 +8,8 @@ interface RoomType {
   id: string
   name: string
   description: string
-  price_per_night: number
-  max_guests: number
+  base_price: number
+  capacity: number
 }
 
 interface AvailableRoom {
@@ -35,19 +35,19 @@ export default function AvailabilitySection() {
 
     // Get rooms already booked for these dates
     const { data: conflicts } = await supabase
-      .from('room_reservations')
+      .from('reservations')
       .select('room_id')
-      .neq('status', 'cancelled')
-      .lt('check_in', checkOut)
-      .gt('check_out', checkIn)
+      .not('status', 'in', '("cancelled","no_show")')
+      .lt('check_in_date', checkOut)
+      .gt('check_out_date', checkIn)
 
     const bookedIds = (conflicts ?? []).map((r: { room_id: string }) => r.room_id)
 
     let query = supabase
       .from('rooms')
-      .select('id, room_number, floor, room_types!inner(id, name, description, price_per_night, max_guests)')
+      .select('id, room_number, floor, room_types!inner(id, name, description, base_price, capacity)')
       .eq('status', 'available')
-      .gte('room_types.max_guests', guests)
+      .gte('room_types.capacity', guests)
 
     if (bookedIds.length > 0) query = query.not('id', 'in', `(${bookedIds.join(',')})`)
 
@@ -114,13 +114,13 @@ export default function AvailabilitySection() {
                           <p className="text-xs text-brown-light">Room {room.room_number} · Floor {room.floor}</p>
                         </div>
                         <span className="text-xs bg-terra-light text-terra px-2 py-0.5 rounded-full">
-                          Up to {room.room_types.max_guests} guests
+                          Up to {room.room_types.capacity} guests
                         </span>
                       </div>
                       <p className="text-xs text-brown-mid mb-3 line-clamp-2">{room.room_types.description}</p>
                       <div className="flex items-center justify-between">
                         <p className="font-semibold text-brown">
-                          ₱{room.room_types.price_per_night.toLocaleString('en-PH')}
+                          ₱{room.room_types.base_price.toLocaleString('en-PH')}
                           <span className="text-xs text-brown-light font-normal"> /night</span>
                         </p>
                         <a href={`${PORTAL_URL}/rooms/${room.id}/book?checkIn=${checkIn}&checkOut=${checkOut}`}

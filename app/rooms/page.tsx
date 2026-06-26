@@ -21,8 +21,8 @@ interface RoomType {
   id: string
   name: string
   description: string
-  price_per_night: number
-  max_guests: number
+  base_price: number
+  capacity: number
 }
 
 interface Room {
@@ -46,7 +46,7 @@ export default function RoomsPage() {
     const supabase = createClient()
     const { data } = await supabase
       .from('rooms')
-      .select('id, room_number, floor, status, room_types!inner(id, name, description, price_per_night, max_guests)')
+      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity)')
       .eq('status', 'available')
       .order('room_number')
     setRooms((data as unknown as Room[]) ?? [])
@@ -62,19 +62,19 @@ export default function RoomsPage() {
     const supabase = createClient()
 
     const { data: conflicts } = await supabase
-      .from('room_reservations')
+      .from('reservations')
       .select('room_id')
-      .neq('status', 'cancelled')
-      .lt('check_in', checkOut)
-      .gt('check_out', checkIn)
+      .not('status', 'in', '("cancelled","no_show")')
+      .lt('check_in_date', checkOut)
+      .gt('check_out_date', checkIn)
 
     const bookedIds = (conflicts ?? []).map((r: { room_id: string }) => r.room_id)
 
     let query = supabase
       .from('rooms')
-      .select('id, room_number, floor, status, room_types!inner(id, name, description, price_per_night, max_guests)')
+      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity)')
       .eq('status', 'available')
-      .gte('room_types.max_guests', guests)
+      .gte('room_types.capacity', guests)
 
     if (bookedIds.length > 0) query = query.not('id', 'in', `(${bookedIds.join(',')})`)
 
@@ -195,7 +195,7 @@ export default function RoomsPage() {
                         <p className="text-xs text-brown-light">Room {room.room_number}</p>
                       </div>
                       <span className="text-xs bg-terra-light text-terra px-2 py-0.5 rounded-full border border-[#f0c8a0]">
-                        ≤ {room.room_types.max_guests} guests
+                        ≤ {room.room_types.capacity} guests
                       </span>
                     </div>
 
@@ -207,7 +207,7 @@ export default function RoomsPage() {
                       <div>
                         <p className="text-xs text-brown-light">per night</p>
                         <p className="font-semibold text-brown text-sm">
-                          ₱{room.room_types.price_per_night.toLocaleString('en-PH')}
+                          ₱{room.room_types.base_price.toLocaleString('en-PH')}
                         </p>
                       </div>
                       <a

@@ -21,8 +21,8 @@ interface RoomType {
   id: string
   name: string
   description: string
-  price_per_night: number
-  max_guests: number
+  base_price: number
+  capacity: number
 }
 
 async function getFeaturedRoomTypes(): Promise<RoomType[]> {
@@ -30,8 +30,8 @@ async function getFeaturedRoomTypes(): Promise<RoomType[]> {
     const supabase = createClient()
     const { data } = await supabase
       .from('room_types')
-      .select('id, name, description, price_per_night, max_guests')
-      .order('price_per_night')
+      .select('id, name, description, base_price, capacity')
+      .order('base_price')
       .limit(6)
     return (data as RoomType[]) ?? []
   } catch {
@@ -112,14 +112,14 @@ export default async function HomePage() {
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-serif text-lg text-brown">{rt.name}</h3>
                       <span className="text-xs text-brown-light border border-warm-border rounded-full px-2 py-0.5">
-                        ≤ {rt.max_guests} guests
+                        ≤ {rt.capacity} guests
                       </span>
                     </div>
                     <p className="text-sm text-brown-mid mb-4 line-clamp-2">{rt.description}</p>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs text-brown-light">from</p>
-                        <p className="font-semibold text-brown">₱{rt.price_per_night.toLocaleString('en-PH')}<span className="text-xs text-brown-light font-normal">/night</span></p>
+                        <p className="font-semibold text-brown">₱{rt.base_price.toLocaleString('en-PH')}<span className="text-xs text-brown-light font-normal">/night</span></p>
                       </div>
                       <Link href="/rooms" className="text-xs text-terra hover:text-terra-dark font-medium transition-colors">View rooms →</Link>
                     </div>

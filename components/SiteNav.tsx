@@ -24,14 +24,14 @@ export default function SiteNav() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <a href={`${PORTAL_URL}/login`}
+          <a href={`${PORTAL_URL}/guest/login`}
             className="text-sm text-[#8a6a5a] hover:text-[#c8a898] transition-colors">
             Sign In
           </a>
-          <a href={`${PORTAL_URL}/signup`}
+          <Link href="/signup"
             className="text-sm bg-terra text-white px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
             Book Now
-          </a>
+          </Link>
         </div>
 
         {/* Mobile menu toggle */}
@@ -52,8 +52,8 @@ export default function SiteNav() {
           <Link href="/rooms" onClick={() => setOpen(false)} className="block text-sm text-[#c8a898] py-1">Rooms</Link>
           <Link href="/#experience" onClick={() => setOpen(false)} className="block text-sm text-[#c8a898] py-1">Dining</Link>
           <div className="pt-2 border-t border-[#3d2418] flex gap-3">
-            <a href={`${PORTAL_URL}/login`} className="text-sm text-[#8a6a5a] py-1">Sign In</a>
-            <a href={`${PORTAL_URL}/signup`} className="text-sm bg-terra text-white px-4 py-1.5 rounded-lg">Book Now</a>
+            <a href={`${PORTAL_URL}/guest/login`} className="text-sm text-[#8a6a5a] py-1">Sign In</a>
+            <Link href="/signup" onClick={() => setOpen(false)} className="text-sm bg-terra text-white px-4 py-1.5 rounded-lg">Book Now</Link>
           </div>
         </div>
       )}
