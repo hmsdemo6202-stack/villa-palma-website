@@ -7,12 +7,14 @@ import Footer from '@/components/Footer'
 const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
 
 const ROOM_IMAGES: Record<string, string> = {
-  Single:   'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80',
-  Double:   'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80',
-  Twin:     'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80',
-  Triple:   'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=600&q=80',
-  Quadroom: 'https://images.unsplash.com/photo-1568495248636-6432b97bd949?auto=format&fit=crop&w=600&q=80',
-  Executive:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80',
+  'Single Room':         'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80',
+  'Double Room':         'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80',
+  'Triple Room':         'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=600&q=80',
+  'Double-Double Room':  'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80',
+  'Family Room De Luxe': 'https://images.unsplash.com/photo-1568495248636-6432b97bd949?auto=format&fit=crop&w=600&q=80',
+  'Family Suite':        'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=600&q=80',
+  'Penthouse Suite':     'https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=600&q=80',
+  'Presidential Suite':  'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80',
 }
 
 const FALLBACK = 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80'
@@ -124,7 +126,7 @@ export default function RoomsPage() {
               <label className="block text-xs uppercase tracking-widest text-brown-light mb-1.5">Guests</label>
               <select value={guests} onChange={e => setGuests(Number(e.target.value))}
                 className="w-full border border-warm-border rounded-lg px-3 py-2 text-sm text-brown focus:outline-none focus:ring-2 focus:ring-terra bg-white">
-                {[1,2,3,4].map(n => <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>)}
+                {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>)}
               </select>
             </div>
             <div>

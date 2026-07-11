@@ -6,34 +6,48 @@ export default function Footer() {
   return (
     <footer className="bg-[#2d1c14] text-[#8a6a5a] mt-auto">
       <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
-          <div>
+          <div className="md:col-span-2">
             <p className="font-serif text-sm tracking-[0.2em] text-[#f0e0d0] uppercase font-bold mb-3">Cabalum Hotel</p>
-            <p className="text-sm leading-relaxed">A boutique hotel experience crafted for those who appreciate the finer things.</p>
+            <p className="text-sm leading-relaxed mb-4">
+              A boutique hotel in the heart of Iloilo City, crafted for guests who appreciate comfort, warmth, and attentive service.
+            </p>
+            <p className="text-xs text-[#5a3a2a] uppercase tracking-widest font-medium">Owned &amp; Operated by</p>
+            <p className="text-sm text-[#c8a898] mt-1">George Michael L. Cabalum</p>
           </div>
 
-          {/* Links */}
+          {/* Explore */}
           <div>
             <p className="text-xs uppercase tracking-widest text-[#5a3a2a] mb-3 font-medium">Explore</p>
             <ul className="space-y-2 text-sm">
               <li><Link href="/" className="hover:text-[#c8a898] transition-colors">Home</Link></li>
               <li><Link href="/rooms" className="hover:text-[#c8a898] transition-colors">Our Rooms</Link></li>
-              <li><Link href="/#experience" className="hover:text-[#c8a898] transition-colors">Dining & Experience</Link></li>
-              <li><a href={`${PORTAL_URL}/signup`} className="hover:text-[#c8a898] transition-colors">Book a Stay</a></li>
+              <li><Link href="/restaurant" className="hover:text-[#c8a898] transition-colors">Restaurant</Link></li>
+              <li><Link href="/gallery" className="hover:text-[#c8a898] transition-colors">Gallery</Link></li>
+              <li><Link href="/promotions" className="hover:text-[#c8a898] transition-colors">Promotions</Link></li>
+              <li><Link href="/about" className="hover:text-[#c8a898] transition-colors">About Us</Link></li>
+              <li><Link href="/faq" className="hover:text-[#c8a898] transition-colors">FAQ</Link></li>
+              <li><Link href="/contact" className="hover:text-[#c8a898] transition-colors">Contact</Link></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <p className="text-xs uppercase tracking-widest text-[#5a3a2a] mb-3 font-medium">Contact</p>
+            <p className="text-xs uppercase tracking-widest text-[#5a3a2a] mb-3 font-medium">Contact Us</p>
             <ul className="space-y-2 text-sm">
-              <li>123 Cabalum Street, Makati City</li>
-              <li>Metro Manila, Philippines</li>
+              <li className="leading-snug">Iloilo City, Iloilo<br />Philippines 5000</li>
               <li className="pt-1">
-                <a href="mailto:hello@cabalumhotel.ph" className="hover:text-[#c8a898] transition-colors">hello@cabalumhotel.ph</a>
+                <a href="tel:+63333201234" className="hover:text-[#c8a898] transition-colors">(033) 320-1234</a>
               </li>
-              <li>+63 2 8888 0000</li>
+              <li>
+                <a href="mailto:info@cabalumhotel.ph" className="hover:text-[#c8a898] transition-colors">info@cabalumhotel.ph</a>
+              </li>
+              <li className="pt-2">
+                <a href={`${PORTAL_URL}/signup`} className="inline-block bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
+                  Book a Room
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -41,9 +55,11 @@ export default function Footer() {
         <div className="mt-10 pt-6 border-t border-[#3d2418] flex flex-col md:flex-row justify-between items-center gap-3 text-xs">
           <p>&copy; {new Date().getFullYear()} Cabalum Hotel. All rights reserved.</p>
           <div className="flex gap-5">
-            <a href={`${PORTAL_URL}/login`} className="hover:text-[#c8a898] transition-colors">Guest Portal</a>
+            <a href={`${PORTAL_URL}/guest/login`} className="hover:text-[#c8a898] transition-colors">Guest Portal</a>
             <span>·</span>
-            <span>Privacy Policy</span>
+            <Link href="/faq" className="hover:text-[#c8a898] transition-colors">FAQ</Link>
+            <span>·</span>
+            <Link href="/contact" className="hover:text-[#c8a898] transition-colors">Contact</Link>
           </div>
         </div>
       </div>
