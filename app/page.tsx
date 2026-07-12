@@ -73,7 +73,7 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              href="/signup"
+              href="/rooms"
               style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
               className="px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] hover:opacity-90 transition-opacity"
             >
@@ -145,7 +145,7 @@ export default async function HomePage() {
               {roomTypes.map(rt => (
                 <Link
                   key={rt.id}
-                  href="/rooms"
+                  href={`/rooms/${rt.id}`}
                   className="group relative block overflow-hidden"
                   style={{ height: '320px' }}
                 >
@@ -255,11 +255,11 @@ export default async function HomePage() {
             Create a guest account to browse availability, make reservations, and order from our restaurant — all in one place.
           </p>
           <Link
-            href="/signup"
+            href="/rooms"
             style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
             className="inline-block px-12 py-4 text-xs font-bold uppercase tracking-[0.25em] hover:opacity-90 transition-opacity"
           >
-            Get Started — It&apos;s Free
+            Browse &amp; Reserve
           </Link>
         </div>
       </section>

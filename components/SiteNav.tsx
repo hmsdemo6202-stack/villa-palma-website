@@ -3,8 +3,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
-
 const NAV_LINKS = [
   { href: '/',           label: 'Home' },
   { href: '/rooms',      label: 'Rooms' },
@@ -56,17 +54,8 @@ export default function SiteNav() {
 
         {/* CTAs */}
         <div className="hidden lg:flex items-center gap-4 shrink-0">
-          <a
-            href={`${PORTAL_URL}/guest/login`}
-            className="text-[11px] uppercase tracking-[0.18em] transition-colors"
-            style={{ color: '#7a5a4a' }}
-            onMouseEnter={e => (e.currentTarget.style.color = '#c9a96e')}
-            onMouseLeave={e => (e.currentTarget.style.color = '#7a5a4a')}
-          >
-            Sign In
-          </a>
           <Link
-            href="/signup"
+            href="/rooms"
             className="text-[10px] font-bold uppercase tracking-[0.2em] px-5 py-2.5 hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
           >
@@ -107,15 +96,8 @@ export default function SiteNav() {
             ))}
           </nav>
           <div className="pt-4 flex gap-4 items-center" style={{ borderTop: '1px solid #2d1c14' }}>
-            <a
-              href={`${PORTAL_URL}/guest/login`}
-              className="text-[11px] uppercase tracking-[0.18em]"
-              style={{ color: '#7a5a4a' }}
-            >
-              Sign In
-            </a>
             <Link
-              href="/signup"
+              href="/rooms"
               onClick={() => setOpen(false)}
               className="text-[10px] font-bold uppercase tracking-[0.2em] px-5 py-2.5"
               style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}

@@ -242,11 +242,18 @@ export default function RoomsPage() {
                           ₱{type.base_price.toLocaleString('en-PH')}
                         </p>
                       </div>
-                      <Link
-                        href="/signup"
-                        className="bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
-                        Book Now
-                      </Link>
+                      <div className="flex gap-2">
+                        <Link
+                          href={`/rooms/${type.id}`}
+                          className="border border-warm-border text-brown-mid text-xs px-3 py-2 rounded-lg hover:bg-cream transition-colors font-medium">
+                          Details
+                        </Link>
+                        <Link
+                          href={`/booking?room_type_id=${type.id}${checkIn ? `&check_in=${checkIn}` : ''}${checkOut ? `&check_out=${checkOut}` : ''}${adults > 1 ? `&adults=${adults}` : ''}${children > 0 ? `&children=${children}` : ''}`}
+                          className="bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
+                          Book Now
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

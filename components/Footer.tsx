@@ -1,7 +1,5 @@
 import Link from 'next/link'
 
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
-
 export default function Footer() {
   return (
     <footer className="bg-[#2d1c14] text-[#8a6a5a] mt-auto">
@@ -27,6 +25,8 @@ export default function Footer() {
               <li><Link href="/gallery" className="hover:text-[#c8a898] transition-colors">Gallery</Link></li>
               <li><Link href="/promotions" className="hover:text-[#c8a898] transition-colors">Promotions</Link></li>
               <li><Link href="/about" className="hover:text-[#c8a898] transition-colors">About Us</Link></li>
+              <li><Link href="/amenities" className="hover:text-[#c8a898] transition-colors">Amenities</Link></li>
+              <li><Link href="/policies" className="hover:text-[#c8a898] transition-colors">Policies</Link></li>
               <li><Link href="/faq" className="hover:text-[#c8a898] transition-colors">FAQ</Link></li>
               <li><Link href="/contact" className="hover:text-[#c8a898] transition-colors">Contact</Link></li>
             </ul>
@@ -44,7 +44,7 @@ export default function Footer() {
                 <a href="mailto:info@cabalumhotel.ph" className="hover:text-[#c8a898] transition-colors">info@cabalumhotel.ph</a>
               </li>
               <li className="pt-2">
-                <Link href="/signup" className="inline-block bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
+                <Link href="/rooms" className="inline-block bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
                   Book a Room
                 </Link>
               </li>
@@ -55,8 +55,6 @@ export default function Footer() {
         <div className="mt-10 pt-6 border-t border-[#3d2418] flex flex-col md:flex-row justify-between items-center gap-3 text-xs">
           <p>&copy; {new Date().getFullYear()} Cabalum Hotel. All rights reserved.</p>
           <div className="flex gap-5">
-            <a href={`${PORTAL_URL}/guest/login`} className="hover:text-[#c8a898] transition-colors">Guest Portal</a>
-            <span>·</span>
             <Link href="/faq" className="hover:text-[#c8a898] transition-colors">FAQ</Link>
             <span>·</span>
             <Link href="/contact" className="hover:text-[#c8a898] transition-colors">Contact</Link>

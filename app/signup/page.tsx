@@ -5,8 +5,6 @@ import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
-
 export default function SignUpPage() {
   const [form, setForm] = useState({ full_name: '', email: '', phone: '', password: '', confirm: '' })
   const [error, setError] = useState<string | null>(null)
@@ -65,19 +63,15 @@ export default function SignUpPage() {
             <h2 className="font-serif text-3xl text-brown mb-3">Welcome to Cabalum Hotel</h2>
             <div className="w-10 h-px bg-terra mx-auto mb-5" />
             <p className="text-brown-mid text-sm leading-relaxed mb-8">
-              Your guest account has been created. Sign in to browse available rooms,
-              make reservations, and order from our restaurant.
+              Your guest account has been created. Download the Cabalum Hotel app to sign in,
+              book rooms, manage your stay, and order from our restaurant.
             </p>
-            <a
-              href={`${PORTAL_URL}/guest/login`}
+            <Link
+              href="/"
               className="inline-block bg-terra text-white px-10 py-3.5 rounded-lg text-sm font-medium hover:bg-terra-dark transition-colors"
             >
-              Sign In to Guest Portal
-            </a>
-            <p className="mt-6 text-xs text-brown-light">
-              You can also{' '}
-              <Link href="/" className="text-terra hover:underline">return to the website</Link>
-            </p>
+              Return to the website
+            </Link>
           </div>
         </main>
         <Footer />
@@ -138,10 +132,7 @@ export default function SignUpPage() {
           </form>
 
           <p className="text-center text-sm text-brown-mid mt-6">
-            Already have an account?{' '}
-            <a href={`${PORTAL_URL}/guest/login`} className="text-terra font-medium hover:underline">
-              Sign in
-            </a>
+            Already have an account? Sign in from the Cabalum Hotel app.
           </p>
         </div>
       </main>
