@@ -3,6 +3,7 @@ import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 import AvailabilitySection from '@/components/AvailabilitySection'
 import Link from 'next/link'
+import { getSiteSettings } from '@/lib/supabase/siteSettings'
 
 const ROOM_IMAGES: Record<string, string> = {
   'Single Room':         'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80',
@@ -39,8 +40,16 @@ async function getFeaturedRoomTypes(): Promise<RoomType[]> {
   }
 }
 
+const HERO_FALLBACK = 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=80'
+const CTA_FALLBACK  = 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80'
+
 export default async function HomePage() {
-  const roomTypes = await getFeaturedRoomTypes()
+  const [roomTypes, siteSettings] = await Promise.all([
+    getFeaturedRoomTypes(),
+    getSiteSettings(['hero_image_url', 'cta_image_url']),
+  ])
+  const heroImage = siteSettings['hero_image_url'] || HERO_FALLBACK
+  const ctaImage  = siteSettings['cta_image_url']  || CTA_FALLBACK
 
   return (
     <>
@@ -51,7 +60,7 @@ export default async function HomePage() {
         {/* Background photo */}
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=80)' }}
+          style={{ backgroundImage: `url(${heroImage})` }}
         />
         {/* Layered gradient overlay */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(26,14,8,0.75) 0%, rgba(26,14,8,0.45) 50%, rgba(26,14,8,0.82) 100%)' }} />
@@ -239,7 +248,7 @@ export default async function HomePage() {
       <section className="relative py-28 px-6 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80)' }}
+          style={{ backgroundImage: `url(${ctaImage})` }}
         />
         <div
           className="absolute inset-0"

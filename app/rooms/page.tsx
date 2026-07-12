@@ -51,6 +51,10 @@ function groupByType(rooms: Room[]): GroupedType[] {
   return Array.from(byId.values())
 }
 
+function roomTypesToGrouped(types: RoomType[]): GroupedType[] {
+  return types.map(t => ({ ...t, availableCount: 0 }))
+}
+
 export default function RoomsPage() {
   const [checkIn, setCheckIn] = useState('')
   const [checkOut, setCheckOut] = useState('')
@@ -64,12 +68,12 @@ export default function RoomsPage() {
   const loadAllRooms = useCallback(async () => {
     setLoading(true)
     const supabase = createClient()
+    // Query room_types directly so all 8 types always show regardless of room unit status
     const { data } = await supabase
-      .from('rooms')
-      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order))')
-      .eq('status', 'available')
-      .order('room_number')
-    setRooms((data as unknown as Room[]) ?? [])
+      .from('room_types')
+      .select('id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order)')
+      .order('base_price')
+    setRooms(roomTypesToGrouped((data as unknown as RoomType[]) ?? []) as unknown as Room[])
     setLoading(false)
   }, [])
 
@@ -113,7 +117,7 @@ export default function RoomsPage() {
   }
 
   const today = new Date().toISOString().split('T')[0]
-  const roomTypes = groupByType(rooms)
+  const roomTypes = searched ? groupByType(rooms) : (rooms as unknown as GroupedType[])
 
   return (
     <>
@@ -225,7 +229,7 @@ export default function RoomsPage() {
                         <span className="text-xs bg-terra-light text-terra px-2 py-0.5 rounded-full border border-[#f0c8a0]">
                           ≤ {type.capacity} guests
                         </span>
-                        {searched && (
+                        {searched && type.availableCount > 0 && (
                           <span className="text-[10px] font-semibold text-terra">Only {type.availableCount} left</span>
                         )}
                       </div>

@@ -1,6 +1,14 @@
 import Link from 'next/link'
+import { getSiteSettings } from '@/lib/supabase/siteSettings'
 
-export default function Footer() {
+export default async function Footer() {
+  const s = await getSiteSettings(['contact_phone', 'contact_email', 'contact_address', 'facebook_url', 'instagram_url'])
+  const phone   = s['contact_phone']   || '(033) 320-1234'
+  const email   = s['contact_email']   || 'info@cabalumhotel.ph'
+  const address = s['contact_address'] || 'Iloilo City, Iloilo\nPhilippines 5000'
+  const fbUrl   = s['facebook_url']   || ''
+  const igUrl   = s['instagram_url']  || ''
+
   return (
     <footer className="bg-[#2d1c14] text-[#8a6a5a] mt-auto">
       <div className="max-w-6xl mx-auto px-6 py-12">
@@ -13,6 +21,22 @@ export default function Footer() {
             </p>
             <p className="text-xs text-[#5a3a2a] uppercase tracking-widest font-medium">Owned &amp; Operated by</p>
             <p className="text-sm text-[#c8a898] mt-1">George Michael L. Cabalum</p>
+            {(fbUrl || igUrl) && (
+              <div className="flex gap-3 mt-4">
+                {fbUrl && (
+                  <a href={fbUrl} target="_blank" rel="noopener noreferrer"
+                    className="text-xs text-[#8a6a5a] hover:text-[#c8a898] transition-colors border border-[#3d2418] px-3 py-1.5 rounded-lg">
+                    Facebook
+                  </a>
+                )}
+                {igUrl && (
+                  <a href={igUrl} target="_blank" rel="noopener noreferrer"
+                    className="text-xs text-[#8a6a5a] hover:text-[#c8a898] transition-colors border border-[#3d2418] px-3 py-1.5 rounded-lg">
+                    Instagram
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Explore */}
@@ -36,12 +60,12 @@ export default function Footer() {
           <div>
             <p className="text-xs uppercase tracking-widest text-[#5a3a2a] mb-3 font-medium">Contact Us</p>
             <ul className="space-y-2 text-sm">
-              <li className="leading-snug">Iloilo City, Iloilo<br />Philippines 5000</li>
+              <li className="leading-snug whitespace-pre-line">{address}</li>
               <li className="pt-1">
-                <a href="tel:+63333201234" className="hover:text-[#c8a898] transition-colors">(033) 320-1234</a>
+                <a href={`tel:${phone.replace(/\D/g, '')}`} className="hover:text-[#c8a898] transition-colors">{phone}</a>
               </li>
               <li>
-                <a href="mailto:info@cabalumhotel.ph" className="hover:text-[#c8a898] transition-colors">info@cabalumhotel.ph</a>
+                <a href={`mailto:${email}`} className="hover:text-[#c8a898] transition-colors">{email}</a>
               </li>
               <li className="pt-2">
                 <Link href="/rooms" className="inline-block bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
