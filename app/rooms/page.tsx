@@ -37,6 +37,20 @@ interface Room {
   room_types: RoomType
 }
 
+interface GroupedType extends RoomType {
+  availableCount: number
+}
+
+function groupByType(rooms: Room[]): GroupedType[] {
+  const byId = new Map<string, GroupedType>()
+  for (const room of rooms) {
+    const existing = byId.get(room.room_types.id)
+    if (existing) existing.availableCount += 1
+    else byId.set(room.room_types.id, { ...room.room_types, availableCount: 1 })
+  }
+  return Array.from(byId.values())
+}
+
 export default function RoomsPage() {
   const [checkIn, setCheckIn] = useState('')
   const [checkOut, setCheckOut] = useState('')
@@ -99,6 +113,7 @@ export default function RoomsPage() {
   }
 
   const today = new Date().toISOString().split('T')[0]
+  const roomTypes = groupByType(rooms)
 
   return (
     <>
@@ -153,7 +168,7 @@ export default function RoomsPage() {
           </div>
           {searched && !loading && (
             <p className="text-sm text-brown-mid mt-3">
-              {rooms.length} room{rooms.length !== 1 ? 's' : ''} available for your dates
+              {roomTypes.length} room type{roomTypes.length !== 1 ? 's' : ''} available for your dates
             </p>
           )}
         </div>
@@ -175,7 +190,7 @@ export default function RoomsPage() {
                 </div>
               ))}
             </div>
-          ) : rooms.length === 0 ? (
+          ) : roomTypes.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-brown-mid text-lg mb-2">No rooms found</p>
               <p className="text-brown-light text-sm">Try adjusting your dates or guest count.</p>
@@ -185,47 +200,46 @@ export default function RoomsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {rooms.map(room => (
-                <div key={room.id} className="bg-white rounded-2xl border border-warm-border overflow-hidden hover:border-terra transition-colors group">
+              {roomTypes.map(type => (
+                <div key={type.id} className="bg-white rounded-2xl border border-warm-border overflow-hidden hover:border-terra transition-colors group">
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={room.room_types.room_type_images?.[0]?.image_url ?? ROOM_IMAGES[room.room_types.name] ?? FALLBACK}
-                      alt={room.room_types.name}
+                      src={type.room_type_images?.[0]?.image_url ?? ROOM_IMAGES[type.name] ?? FALLBACK}
+                      alt={type.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <span className="absolute bottom-3 left-3 text-xs text-white bg-[#00000055] backdrop-blur-sm px-2 py-1 rounded-full">
-                      Floor {room.floor}
-                    </span>
-                    {room.room_types.room_type_images?.length > 0 && (
+                    {type.room_type_images?.length > 0 && (
                       <button
-                        onClick={() => setGallery(room.room_types)}
+                        onClick={() => setGallery(type)}
                         className="absolute bottom-3 right-3 text-xs text-white bg-[#00000055] backdrop-blur-sm px-3 py-1 rounded-full hover:bg-[#00000088] transition-colors"
                       >
-                        📷 View Photos ({room.room_types.room_type_images.length})
+                        📷 View Photos ({type.room_type_images.length})
                       </button>
                     )}
                   </div>
 
                   <div className="p-5">
                     <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-serif text-base text-brown">{room.room_types.name}</h3>
-                        <p className="text-xs text-brown-light">Room {room.room_number}</p>
+                      <h3 className="font-serif text-base text-brown">{type.name}</h3>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="text-xs bg-terra-light text-terra px-2 py-0.5 rounded-full border border-[#f0c8a0]">
+                          ≤ {type.capacity} guests
+                        </span>
+                        {searched && (
+                          <span className="text-[10px] font-semibold text-terra">Only {type.availableCount} left</span>
+                        )}
                       </div>
-                      <span className="text-xs bg-terra-light text-terra px-2 py-0.5 rounded-full border border-[#f0c8a0]">
-                        ≤ {room.room_types.capacity} guests
-                      </span>
                     </div>
 
                     <p className="text-xs text-brown-mid mb-4 line-clamp-2 leading-relaxed">
-                      {room.room_types.description}
+                      {type.description}
                     </p>
 
                     <div className="flex items-center justify-between pt-3 border-t border-warm-border">
                       <div>
                         <p className="text-xs text-brown-light">per night</p>
                         <p className="font-semibold text-brown text-sm">
-                          ₱{room.room_types.base_price.toLocaleString('en-PH')}
+                          ₱{type.base_price.toLocaleString('en-PH')}
                         </p>
                       </div>
                       <Link
