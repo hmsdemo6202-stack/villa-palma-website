@@ -2,8 +2,6 @@ import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
-
 const TEAM = [
   {
     role: 'Owner & CEO',
@@ -131,10 +129,10 @@ export default function AboutPage() {
               className="inline-block border border-[#5a3a2a] text-[#c8a898] px-6 py-3 rounded-lg text-sm hover:border-[#8a6a5a] transition-colors">
               ✉ info@cabalumhotel.ph
             </a>
-            <a href={`${PORTAL_URL}/signup`}
+            <Link href="/signup"
               className="inline-block bg-terra text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-terra-dark transition-colors">
               Book a Room
-            </a>
+            </Link>
           </div>
         </div>
       </section>

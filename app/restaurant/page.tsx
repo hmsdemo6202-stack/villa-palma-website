@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
-
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
+import Link from 'next/link'
 
 interface PosCategory { id: string; name: string }
 interface PosItem {
@@ -137,10 +136,10 @@ export default async function RestaurantPage() {
           <p className="text-[#9d8075] text-sm mb-6 leading-relaxed">
             Prefer to eat in the comfort of your room? Order directly through our guest app or call the front desk.
           </p>
-          <a href={`${PORTAL_URL}/signup`}
+          <Link href="/signup"
             className="inline-block bg-terra text-white px-8 py-3 rounded-lg text-sm font-medium hover:bg-terra-dark transition-colors">
             Order via Guest App
-          </a>
+          </Link>
         </div>
       </section>
 

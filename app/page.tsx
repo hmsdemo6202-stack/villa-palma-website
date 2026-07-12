@@ -4,8 +4,6 @@ import Footer from '@/components/Footer'
 import AvailabilitySection from '@/components/AvailabilitySection'
 import Link from 'next/link'
 
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
-
 const ROOM_IMAGES: Record<string, string> = {
   'Single Room':         'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80',
   'Double Room':         'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
@@ -74,13 +72,13 @@ export default async function HomePage() {
             Where every stay becomes a story worth telling. Boutique hospitality in the heart of Iloilo.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a
-              href={`${PORTAL_URL}/signup`}
+            <Link
+              href="/signup"
               style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
               className="px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] hover:opacity-90 transition-opacity"
             >
               Reserve Your Stay
-            </a>
+            </Link>
             <Link
               href="/rooms"
               style={{ borderColor: 'rgba(201,169,110,0.5)', color: '#c9a96e' }}
@@ -256,13 +254,13 @@ export default async function HomePage() {
           <p className="text-sm leading-relaxed mb-10" style={{ color: '#a89080' }}>
             Create a guest account to browse availability, make reservations, and order from our restaurant — all in one place.
           </p>
-          <a
-            href={`${PORTAL_URL}/signup`}
+          <Link
+            href="/signup"
             style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
             className="inline-block px-12 py-4 text-xs font-bold uppercase tracking-[0.25em] hover:opacity-90 transition-opacity"
           >
             Get Started — It&apos;s Free
-          </a>
+          </Link>
         </div>
       </section>
 

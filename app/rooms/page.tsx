@@ -3,8 +3,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
-
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
+import RoomGalleryModal, { GalleryPhoto } from '@/components/RoomGalleryModal'
+import GuestCounter from '@/components/GuestCounter'
+import Link from 'next/link'
 
 const ROOM_IMAGES: Record<string, string> = {
   'Single Room':         'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80',
@@ -25,6 +26,7 @@ interface RoomType {
   description: string
   base_price: number
   capacity: number
+  room_type_images: GalleryPhoto[]
 }
 
 interface Room {
@@ -38,17 +40,19 @@ interface Room {
 export default function RoomsPage() {
   const [checkIn, setCheckIn] = useState('')
   const [checkOut, setCheckOut] = useState('')
-  const [guests, setGuests] = useState(1)
+  const [adults, setAdults] = useState(1)
+  const [children, setChildren] = useState(0)
   const [rooms, setRooms] = useState<Room[]>([])
   const [loading, setLoading] = useState(true)
   const [searched, setSearched] = useState(false)
+  const [gallery, setGallery] = useState<RoomType | null>(null)
 
   const loadAllRooms = useCallback(async () => {
     setLoading(true)
     const supabase = createClient()
     const { data } = await supabase
       .from('rooms')
-      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity)')
+      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order))')
       .eq('status', 'available')
       .order('room_number')
     setRooms((data as unknown as Room[]) ?? [])
@@ -74,9 +78,9 @@ export default function RoomsPage() {
 
     let query = supabase
       .from('rooms')
-      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity)')
+      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order))')
       .eq('status', 'available')
-      .gte('room_types.capacity', guests)
+      .gte('room_types.capacity', adults + children)
 
     if (bookedIds.length > 0) query = query.not('id', 'in', `(${bookedIds.join(',')})`)
 
@@ -88,7 +92,8 @@ export default function RoomsPage() {
   function clearSearch() {
     setCheckIn('')
     setCheckOut('')
-    setGuests(1)
+    setAdults(1)
+    setChildren(0)
     setSearched(false)
     loadAllRooms()
   }
@@ -124,10 +129,13 @@ export default function RoomsPage() {
             </div>
             <div>
               <label className="block text-xs uppercase tracking-widest text-brown-light mb-1.5">Guests</label>
-              <select value={guests} onChange={e => setGuests(Number(e.target.value))}
-                className="w-full border border-warm-border rounded-lg px-3 py-2 text-sm text-brown focus:outline-none focus:ring-2 focus:ring-terra bg-white">
-                {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>)}
-              </select>
+              <GuestCounter
+                adults={adults}
+                childCount={children}
+                onAdultsChange={setAdults}
+                onChildCountChange={setChildren}
+                variant="light"
+              />
             </div>
             <div>
               <button onClick={search} disabled={!checkIn || !checkOut || loading}
@@ -181,13 +189,21 @@ export default function RoomsPage() {
                 <div key={room.id} className="bg-white rounded-2xl border border-warm-border overflow-hidden hover:border-terra transition-colors group">
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={ROOM_IMAGES[room.room_types.name] ?? FALLBACK}
+                      src={room.room_types.room_type_images?.[0]?.image_url ?? ROOM_IMAGES[room.room_types.name] ?? FALLBACK}
                       alt={room.room_types.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <span className="absolute bottom-3 left-3 text-xs text-white bg-[#00000055] backdrop-blur-sm px-2 py-1 rounded-full">
                       Floor {room.floor}
                     </span>
+                    {room.room_types.room_type_images?.length > 0 && (
+                      <button
+                        onClick={() => setGallery(room.room_types)}
+                        className="absolute bottom-3 right-3 text-xs text-white bg-[#00000055] backdrop-blur-sm px-3 py-1 rounded-full hover:bg-[#00000088] transition-colors"
+                      >
+                        📷 View Photos ({room.room_types.room_type_images.length})
+                      </button>
+                    )}
                   </div>
 
                   <div className="p-5">
@@ -212,15 +228,11 @@ export default function RoomsPage() {
                           ₱{room.room_types.base_price.toLocaleString('en-PH')}
                         </p>
                       </div>
-                      <a
-                        href={
-                          checkIn && checkOut
-                            ? `${PORTAL_URL}/rooms/${room.id}/book?checkIn=${checkIn}&checkOut=${checkOut}`
-                            : `${PORTAL_URL}/signup`
-                        }
+                      <Link
+                        href="/signup"
                         className="bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
                         Book Now
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -231,6 +243,14 @@ export default function RoomsPage() {
       </main>
 
       <Footer />
+
+      {gallery && (
+        <RoomGalleryModal
+          photos={[...gallery.room_type_images].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))}
+          roomTypeName={gallery.name}
+          onClose={() => setGallery(null)}
+        />
+      )}
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
+import GalleryGrid from '@/components/GalleryGrid'
 
 interface GalleryItem {
   id: string
@@ -39,7 +40,6 @@ async function getGalleryItems(): Promise<{ items: GalleryItem[]; isFallback: bo
 
 export default async function GalleryPage() {
   const { items } = await getGalleryItems()
-  const categories = ['All', ...Array.from(new Set(items.map(i => i.category)))]
 
   return (
     <>
@@ -56,36 +56,7 @@ export default async function GalleryPage() {
       {/* Gallery grid */}
       <main className="py-14 px-6">
         <div className="max-w-5xl mx-auto">
-
-          {/* Category filter (static render — enhanced with JS would require client component) */}
-          <div className="flex flex-wrap gap-2 mb-8 justify-center">
-            {categories.map(c => (
-              <span key={c} className="text-xs border border-warm-border text-brown-mid px-4 py-1.5 rounded-full bg-white">
-                {c}
-              </span>
-            ))}
-          </div>
-
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-            {items.map(item => (
-              <div key={item.id} className="break-inside-avoid rounded-xl overflow-hidden border border-warm-border group">
-                <div className="relative overflow-hidden bg-[#f5ede4]">
-                  <img
-                    src={item.image_url}
-                    alt={item.title ?? 'Hotel photo'}
-                    className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                {(item.title || item.description) && (
-                  <div className="bg-white px-4 py-3">
-                    {item.title && <p className="font-medium text-brown text-sm">{item.title}</p>}
-                    {item.description && <p className="text-xs text-brown-light mt-0.5">{item.description}</p>}
-                    <p className="text-[10px] text-terra uppercase tracking-widest mt-1">{item.category}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <GalleryGrid items={items} />
         </div>
       </main>
 

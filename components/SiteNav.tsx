@@ -65,13 +65,13 @@ export default function SiteNav() {
           >
             Sign In
           </a>
-          <a
-            href={`${PORTAL_URL}/signup`}
+          <Link
+            href="/signup"
             className="text-[10px] font-bold uppercase tracking-[0.2em] px-5 py-2.5 hover:opacity-90 transition-opacity"
             style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
           >
             Book Now
-          </a>
+          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -114,14 +114,14 @@ export default function SiteNav() {
             >
               Sign In
             </a>
-            <a
-              href={`${PORTAL_URL}/signup`}
+            <Link
+              href="/signup"
               onClick={() => setOpen(false)}
               className="text-[10px] font-bold uppercase tracking-[0.2em] px-5 py-2.5"
               style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
             >
               Book Now
-            </a>
+            </Link>
           </div>
         </div>
       )}

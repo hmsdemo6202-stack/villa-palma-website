@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
+import GuestCounter from './GuestCounter'
 
 interface RoomType {
   id: string
@@ -22,7 +22,8 @@ interface AvailableRoom {
 export default function AvailabilitySection() {
   const [checkIn, setCheckIn] = useState('')
   const [checkOut, setCheckOut] = useState('')
-  const [guests, setGuests] = useState(1)
+  const [adults, setAdults] = useState(1)
+  const [children, setChildren] = useState(0)
   const [rooms, setRooms] = useState<AvailableRoom[] | null>(null)
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
@@ -46,7 +47,7 @@ export default function AvailabilitySection() {
       .from('rooms')
       .select('id, room_number, floor, room_types!inner(id, name, description, base_price, capacity)')
       .eq('status', 'available')
-      .gte('room_types.capacity', guests)
+      .gte('room_types.capacity', adults + children)
 
     if (bookedIds.length > 0) query = query.not('id', 'in', `(${bookedIds.join(',')})`)
 
@@ -104,19 +105,13 @@ export default function AvailabilitySection() {
             </div>
             <div>
               <label className="block text-[10px] uppercase tracking-[0.25em] mb-2" style={{ color: '#c9a96e' }}>Guests</label>
-              <select
-                value={guests}
-                onChange={e => setGuests(Number(e.target.value))}
-                className="w-full px-4 py-3 text-sm focus:outline-none"
-                style={{
-                  backgroundColor: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(201,169,110,0.25)',
-                  color: '#f5ede4',
-                  colorScheme: 'dark',
-                }}
-              >
-                {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>)}
-              </select>
+              <GuestCounter
+                adults={adults}
+                childCount={children}
+                onAdultsChange={setAdults}
+                onChildCountChange={setChildren}
+                variant="dark"
+              />
             </div>
             <div className="flex items-end">
               <button
@@ -166,13 +161,13 @@ export default function AvailabilitySection() {
                             <span className="text-xs font-normal ml-1" style={{ color: '#7a5a4a' }}>/night</span>
                           </p>
                         </div>
-                        <a
-                          href={`${PORTAL_URL}/rooms/${room.id}/book?checkIn=${checkIn}&checkOut=${checkOut}`}
+                        <Link
+                          href="/signup"
                           className="text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 hover:opacity-90 transition-opacity"
                           style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
                         >
                           Book
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   ))}

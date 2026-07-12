@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
@@ -87,9 +88,20 @@ export default function ContactPage() {
                 <p className="text-sm text-brown-mid mb-4 leading-relaxed">
                   Ready to book your stay? Create a free guest account to check availability and reserve instantly.
                 </p>
-                <a href={process.env.NEXT_PUBLIC_PORTAL_URL + '/signup'}
+                <Link href="/signup"
                   className="inline-block bg-terra text-white text-sm px-5 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
                   Reserve a Room
+                </Link>
+              </div>
+
+              <div className="mt-4 p-5 bg-[#f5ede4] rounded-xl border border-warm-border">
+                <p className="text-xs uppercase tracking-widest text-terra mb-2">Already a Guest?</p>
+                <p className="text-sm text-brown-mid mb-4 leading-relaxed">
+                  Sign in to your guest account to send a support ticket to our front desk team and track their reply.
+                </p>
+                <a href={`${process.env.NEXT_PUBLIC_PORTAL_URL ?? ''}/guest/support`}
+                  className="inline-block border border-terra text-terra text-sm px-5 py-2 rounded-lg hover:bg-terra hover:text-white transition-colors font-medium">
+                  Open Support Ticket
                 </a>
               </div>
             </div>

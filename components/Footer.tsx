@@ -44,9 +44,9 @@ export default function Footer() {
                 <a href="mailto:info@cabalumhotel.ph" className="hover:text-[#c8a898] transition-colors">info@cabalumhotel.ph</a>
               </li>
               <li className="pt-2">
-                <a href={`${PORTAL_URL}/signup`} className="inline-block bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
+                <Link href="/signup" className="inline-block bg-terra text-white text-xs px-4 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
                   Book a Room
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

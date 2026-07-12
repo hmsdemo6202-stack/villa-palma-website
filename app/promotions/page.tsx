@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
-
-const PORTAL_URL = process.env.NEXT_PUBLIC_PORTAL_URL ?? ''
+import Link from 'next/link'
 
 interface Promotion {
   id: string
@@ -63,10 +62,10 @@ export default async function PromotionsPage() {
               <p className="text-sm text-brown-mid mb-6 max-w-sm mx-auto">
                 We don&apos;t have a running promotion right now. Check back soon — we regularly offer seasonal deals and special packages.
               </p>
-              <a href={`${PORTAL_URL}/signup`}
+              <Link href="/signup"
                 className="inline-block bg-terra text-white px-8 py-3 rounded-lg text-sm font-medium hover:bg-terra-dark transition-colors">
                 Book at Regular Rate
-              </a>
+              </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -105,10 +104,10 @@ export default async function PromotionsPage() {
                         {p.valid_until ? fmtDate(p.valid_until) : 'No end date'}
                       </p>
                     )}
-                    <a href={`${PORTAL_URL}/signup`}
+                    <Link href="/signup"
                       className="inline-block bg-terra text-white text-sm px-5 py-2 rounded-lg hover:bg-terra-dark transition-colors font-medium">
                       Book Now
-                    </a>
+                    </Link>
                   </div>
                 </div>
               ))}
