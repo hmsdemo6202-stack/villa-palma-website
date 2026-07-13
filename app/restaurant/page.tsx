@@ -136,9 +136,9 @@ export default async function RestaurantPage() {
           <p className="text-[#9d8075] text-sm mb-6 leading-relaxed">
             Prefer to eat in the comfort of your room? Order directly through our guest app or call the front desk.
           </p>
-          <Link href="/signup"
+          <Link href="/restaurant/order"
             className="inline-block bg-terra text-white px-8 py-3 rounded-lg text-sm font-medium hover:bg-terra-dark transition-colors">
-            Order via Guest App
+            Order Online
           </Link>
         </div>
       </section>
