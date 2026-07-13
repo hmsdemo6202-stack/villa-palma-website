@@ -110,7 +110,6 @@ function BookingContent() {
         room_id: roomId,
         check_in_date: checkIn,
         check_out_date: checkOut,
-        nights: n,
         total_amount: total,
         status: 'inquiry',
         special_requests: form.special_requests.trim() || null,

@@ -95,6 +95,9 @@ export default function RestaurantOrderPage() {
 
   async function placeOrder() {
     if (cart.length === 0) return
+    if (!guestId) {
+      setStatus('error'); return
+    }
     setStatus('confirming')
 
     const { data: order, error: orderErr } = await supabase
@@ -189,9 +192,21 @@ export default function RestaurantOrderPage() {
         {status === 'error' && (
           <div className="max-w-xl mx-auto mt-10 px-6">
             <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
-              <p className="text-red-700 font-medium mb-2">Could not place order.</p>
-              <p className="text-red-600 text-sm mb-4">Please try again or contact the front desk.</p>
-              <button onClick={() => setStatus('cart')} className="bg-terra text-white px-5 py-2 rounded-lg text-sm">Try Again</button>
+              {!guestId ? (
+                <>
+                  <p className="text-red-700 font-medium mb-2">Guest profile not found.</p>
+                  <p className="text-red-600 text-sm mb-4">
+                    Your account isn&apos;t linked to a guest profile yet. Please contact the front desk or{' '}
+                    <Link href="/signup" className="underline">complete your registration</Link>.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-red-700 font-medium mb-2">Could not place order.</p>
+                  <p className="text-red-600 text-sm mb-4">Please try again or contact the front desk.</p>
+                </>
+              )}
+              <button onClick={() => setStatus('cart')} className="bg-terra text-white px-5 py-2 rounded-lg text-sm">Go Back</button>
             </div>
           </div>
         )}

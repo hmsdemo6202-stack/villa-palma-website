@@ -34,6 +34,7 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
               <img
                 src={item.image_url}
                 alt={item.title ?? 'Hotel photo'}
+                loading="lazy"
                 className="w-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>

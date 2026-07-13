@@ -162,7 +162,7 @@ export default function AvailabilitySection() {
                           </p>
                         </div>
                         <Link
-                          href="/signup"
+                          href={`/booking?room_type_id=${room.room_types.id}${checkIn ? `&check_in=${checkIn}` : ''}${checkOut ? `&check_out=${checkOut}` : ''}`}
                           className="text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 hover:opacity-90 transition-opacity"
                           style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
                         >
