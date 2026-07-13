@@ -63,15 +63,22 @@ export default function SignUpPage() {
             <h2 className="font-serif text-3xl text-brown mb-3">Welcome to Cabalum Hotel</h2>
             <div className="w-10 h-px bg-terra mx-auto mb-5" />
             <p className="text-brown-mid text-sm leading-relaxed mb-8">
-              Your guest account has been created. Download the Cabalum Hotel app to sign in,
-              book rooms, manage your stay, and order from our restaurant.
+              Your guest account has been created. Sign in to view your reservations and manage your stay.
             </p>
-            <Link
-              href="/"
-              className="inline-block bg-terra text-white px-10 py-3.5 rounded-lg text-sm font-medium hover:bg-terra-dark transition-colors"
-            >
-              Return to the website
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/login"
+                className="inline-block bg-terra text-white px-10 py-3.5 rounded-lg text-sm font-medium hover:bg-terra-dark transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/"
+                className="inline-block border border-warm-border text-brown px-10 py-3.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+              >
+                Return Home
+              </Link>
+            </div>
           </div>
         </main>
         <Footer />
@@ -132,7 +139,10 @@ export default function SignUpPage() {
           </form>
 
           <p className="text-center text-sm text-brown-mid mt-6">
-            Already have an account? Sign in from the Cabalum Hotel app.
+            Already have an account?{' '}
+            <Link href="/login" className="text-terra hover:underline font-medium">
+              Sign in here
+            </Link>
           </p>
         </div>
       </main>

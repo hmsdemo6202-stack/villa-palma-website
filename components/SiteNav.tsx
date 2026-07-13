@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home' },
@@ -14,8 +15,52 @@ const NAV_LINKS = [
 ]
 
 export default function SiteNav() {
-  const [open, setOpen] = useState(false)
-  const pathname = usePathname()
+  const [open,      setOpen]      = useState(false)
+  const [user,      setUser]      = useState<{ email: string; name: string } | null>(null)
+  const [dropdown,  setDropdown]  = useState(false)
+  const dropRef                    = useRef<HTMLDivElement>(null)
+  const pathname                   = usePathname()
+  const router                     = useRouter()
+  const supabase                   = createClient()
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user: u } }) => {
+      if (u) {
+        const name = u.user_metadata?.full_name ?? u.email?.split('@')[0] ?? 'Guest'
+        setUser({ email: u.email ?? '', name })
+      }
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
+      const u = session?.user
+      if (u) {
+        const name = u.user_metadata?.full_name ?? u.email?.split('@')[0] ?? 'Guest'
+        setUser({ email: u.email ?? '', name })
+      } else {
+        setUser(null)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handle(e: MouseEvent) {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) {
+        setDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handle)
+    return () => document.removeEventListener('mousedown', handle)
+  }, [])
+
+  async function signOut() {
+    await supabase.auth.signOut()
+    setDropdown(false)
+    router.push('/')
+  }
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/'
@@ -52,8 +97,74 @@ export default function SiteNav() {
           ))}
         </nav>
 
-        {/* CTAs */}
-        <div className="hidden lg:flex items-center gap-4 shrink-0">
+        {/* Auth + CTA */}
+        <div className="hidden lg:flex items-center gap-3 shrink-0">
+          {user ? (
+            <div ref={dropRef} className="relative">
+              <button
+                onClick={() => setDropdown(v => !v)}
+                className="flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] px-3 py-2 rounded-lg transition-colors"
+                style={{ color: '#c9a96e', border: '1px solid #2d1c14' }}
+              >
+                <span
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold"
+                  style={{ backgroundColor: '#b85c38', color: '#fff' }}
+                >
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+                <span className="max-w-[100px] truncate">{user.name}</span>
+                <svg className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {dropdown && (
+                <div
+                  className="absolute right-0 top-full mt-1 w-52 rounded-xl shadow-lg border overflow-hidden"
+                  style={{ backgroundColor: '#1a0e08', borderColor: '#2d1c14' }}
+                >
+                  <div className="px-4 py-3" style={{ borderBottom: '1px solid #2d1c14' }}>
+                    <p className="text-[9px] uppercase tracking-widest" style={{ color: '#7a5a4a' }}>Signed in as</p>
+                    <p className="text-xs font-medium truncate mt-0.5" style={{ color: '#c9a96e' }}>{user.email}</p>
+                  </div>
+                  <div className="py-1">
+                    <Link
+                      href="/account"
+                      onClick={() => setDropdown(false)}
+                      className="block px-4 py-2.5 text-[11px] uppercase tracking-widest transition-colors hover:opacity-80"
+                      style={{ color: '#f5ede4' }}
+                    >
+                      My Account
+                    </Link>
+                    <button
+                      onClick={signOut}
+                      className="block w-full text-left px-4 py-2.5 text-[11px] uppercase tracking-widest transition-colors hover:opacity-80"
+                      style={{ color: '#ef4444' }}
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-[10px] uppercase tracking-[0.2em] px-4 py-2.5 transition-colors hover:opacity-80"
+                style={{ color: '#c9a96e' }}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2.5 rounded-lg transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#2d1c14', color: '#c9a96e', border: '1px solid #3d2a1c' }}
+              >
+                Register
+              </Link>
+            </>
+          )}
           <Link
             href="/rooms"
             className="text-[10px] font-bold uppercase tracking-[0.2em] px-5 py-2.5 hover:opacity-90 transition-opacity"
@@ -95,7 +206,48 @@ export default function SiteNav() {
               </Link>
             ))}
           </nav>
-          <div className="pt-4 flex gap-4 items-center" style={{ borderTop: '1px solid #2d1c14' }}>
+          <div className="pt-4 flex flex-wrap gap-3 items-center" style={{ borderTop: '1px solid #2d1c14' }}>
+            {user ? (
+              <>
+                <span className="text-[10px] uppercase tracking-widest" style={{ color: '#7a5a4a' }}>
+                  Hi, {user.name}
+                </span>
+                <Link
+                  href="/account"
+                  onClick={() => setOpen(false)}
+                  className="text-[10px] uppercase tracking-[0.15em] px-4 py-2"
+                  style={{ color: '#c9a96e' }}
+                >
+                  My Account
+                </Link>
+                <button
+                  onClick={() => { setOpen(false); signOut() }}
+                  className="text-[10px] uppercase tracking-[0.15em] px-4 py-2"
+                  style={{ color: '#ef4444' }}
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setOpen(false)}
+                  className="text-[10px] uppercase tracking-[0.15em] px-4 py-2"
+                  style={{ color: '#c9a96e' }}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setOpen(false)}
+                  className="text-[10px] uppercase tracking-[0.15em] px-4 py-2 rounded-lg"
+                  style={{ color: '#c9a96e', border: '1px solid #3d2a1c', backgroundColor: '#2d1c14' }}
+                >
+                  Register
+                </Link>
+              </>
+            )}
             <Link
               href="/rooms"
               onClick={() => setOpen(false)}
