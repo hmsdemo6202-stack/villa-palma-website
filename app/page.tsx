@@ -26,6 +26,7 @@ interface RoomType {
   description: string
   base_price: number
   capacity: number
+  image_url: string | null
   room_type_images: RoomTypeImage[]
 }
 
@@ -34,7 +35,7 @@ async function getFeaturedRoomTypes(): Promise<RoomType[]> {
     const supabase = createClient()
     const { data } = await supabase
       .from('room_types')
-      .select('id, name, description, base_price, capacity, room_type_images(id, image_url, sort_order)')
+      .select('id, name, description, base_price, capacity, image_url, room_type_images(id, image_url, sort_order)')
       .order('base_price')
       .limit(6)
     return (data as RoomType[]) ?? []
@@ -115,7 +116,7 @@ export default async function HomePage() {
                 >
                   {/* Photo */}
                   <img
-                    src={rt.room_type_images?.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))[0]?.image_url ?? ROOM_IMAGES[rt.name] ?? FALLBACK}
+                    src={rt.room_type_images?.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))[0]?.image_url ?? rt.image_url ?? ROOM_IMAGES[rt.name] ?? FALLBACK}
                     alt={rt.name}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
