@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 import AvailabilitySection from '@/components/AvailabilitySection'
+import HeroCarousel, { HeroSlide } from '@/components/HeroCarousel'
 import Link from 'next/link'
 import { getSiteSettings } from '@/lib/supabase/siteSettings'
 
@@ -43,67 +44,39 @@ async function getFeaturedRoomTypes(): Promise<RoomType[]> {
 const HERO_FALLBACK = 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=80'
 const CTA_FALLBACK  = 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80'
 
+async function getHeroSlides(): Promise<HeroSlide[]> {
+  try {
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('hero_slides')
+      .select('id, image_url, title, subtitle')
+      .eq('is_active', true)
+      .order('sort_order')
+    return (data as HeroSlide[]) ?? []
+  } catch {
+    return []
+  }
+}
+
 export default async function HomePage() {
-  const [roomTypes, siteSettings] = await Promise.all([
+  const [roomTypes, siteSettings, heroSlides] = await Promise.all([
     getFeaturedRoomTypes(),
     getSiteSettings(['hero_image_url', 'cta_image_url']),
+    getHeroSlides(),
   ])
-  const heroImage = siteSettings['hero_image_url'] || HERO_FALLBACK
-  const ctaImage  = siteSettings['cta_image_url']  || CTA_FALLBACK
+  const ctaImage = siteSettings['cta_image_url'] || CTA_FALLBACK
+
+  // Fall back to single site_settings image if no slides in DB yet
+  const slides: HeroSlide[] = heroSlides.length > 0
+    ? heroSlides
+    : [{ id: 'fallback', image_url: siteSettings['hero_image_url'] || HERO_FALLBACK, title: null, subtitle: null }]
 
   return (
     <>
       <SiteNav />
 
-      {/* ── Hero ── */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-        {/* Background photo */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
-        {/* Layered gradient overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(26,14,8,0.75) 0%, rgba(26,14,8,0.45) 50%, rgba(26,14,8,0.82) 100%)' }} />
-
-        {/* Content */}
-        <div className="relative z-10 text-center px-6 py-32 max-w-3xl mx-auto">
-          <p className="text-[10px] uppercase tracking-[0.45em] mb-8" style={{ color: '#c9a96e' }}>
-            Boutique Hotel · Iloilo City, Philippines
-          </p>
-          <h1 className="font-serif text-7xl md:text-[100px] leading-none tracking-tight mb-3" style={{ color: '#f5ede4' }}>
-            Cabalum
-          </h1>
-          <p className="font-serif text-xl md:text-2xl italic mb-10" style={{ color: '#c8a898' }}>
-            Hotel &amp; Suites
-          </p>
-          <div className="mx-auto mb-10 w-14" style={{ height: '1px', backgroundColor: '#c9a96e' }} />
-          <p className="text-base leading-relaxed max-w-sm mx-auto mb-12" style={{ color: '#a89080' }}>
-            Where every stay becomes a story worth telling. Boutique hospitality in the heart of Iloilo.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/rooms"
-              style={{ backgroundColor: '#c9a96e', color: '#1a0e08' }}
-              className="px-10 py-4 text-xs font-bold uppercase tracking-[0.25em] hover:opacity-90 transition-opacity"
-            >
-              Reserve Your Stay
-            </Link>
-            <Link
-              href="/rooms"
-              style={{ borderColor: 'rgba(201,169,110,0.5)', color: '#c9a96e' }}
-              className="border px-10 py-4 text-xs font-semibold uppercase tracking-[0.25em] hover:border-[#c9a96e] transition-colors"
-            >
-              Explore Rooms
-            </Link>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2" style={{ color: 'rgba(201,169,110,0.55)' }}>
-          <span className="text-[9px] uppercase tracking-[0.3em]">Scroll</span>
-          <div style={{ width: '1px', height: '32px', background: 'linear-gradient(to bottom, rgba(201,169,110,0.55), transparent)' }} />
-        </div>
-      </section>
+      {/* ── Hero Slideshow ── */}
+      <HeroCarousel slides={slides} />
 
       {/* ── Stats strip ── */}
       <section className="bg-white border-y border-warm-border">
