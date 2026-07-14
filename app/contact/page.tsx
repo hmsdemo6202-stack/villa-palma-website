@@ -6,9 +6,9 @@ import { getSiteSettings } from '@/lib/supabase/siteSettings'
 
 export default async function ContactPage() {
   const s = await getSiteSettings(['contact_phone', 'contact_email', 'contact_address'])
-  const phone   = s['contact_phone']   || '(033) 320-1234'
-  const email   = s['contact_email']   || 'info@cabalumhotel.ph'
-  const address = s['contact_address'] || 'Iloilo City, Iloilo\nPhilippines 5000'
+  const phone   = s['contact_phone']   || '(033) 337 2536'
+  const email   = s['contact_email']   || '1945cwc@gmail.com'
+  const address = s['contact_address'] || 'Dr. Fermin Caram Ave. Sr., Iznart St.\nIloilo City, Iloilo 5000'
 
   const CONTACT_INFO = [
     { icon: '📍', label: 'Address',          value: address,   href: undefined },
