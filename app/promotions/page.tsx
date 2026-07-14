@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
