@@ -86,9 +86,9 @@ export default function SiteNav() {
             <Link
               key={href}
               href={href}
-              className="text-[11px] uppercase tracking-[0.18em] transition-colors relative pb-0.5"
+              className={`text-[11px] uppercase tracking-[0.18em] transition-colors relative pb-0.5 hover:text-[#c9a96e] ${isActive(href) ? '' : 'hover:opacity-100'}`}
               style={{
-                color: isActive(href) ? '#c9a96e' : '#7a5a4a',
+                color: isActive(href) ? '#c9a96e' : '#b09080',
                 borderBottom: isActive(href) ? '1px solid #c9a96e' : '1px solid transparent',
               }}
             >

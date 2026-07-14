@@ -19,12 +19,14 @@ const ROOM_IMAGES: Record<string, string> = {
 
 const FALLBACK = 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80'
 
+interface RoomTypeImage { id: string; image_url: string; sort_order: number }
 interface RoomType {
   id: string
   name: string
   description: string
   base_price: number
   capacity: number
+  room_type_images: RoomTypeImage[]
 }
 
 async function getFeaturedRoomTypes(): Promise<RoomType[]> {
@@ -32,7 +34,7 @@ async function getFeaturedRoomTypes(): Promise<RoomType[]> {
     const supabase = createClient()
     const { data } = await supabase
       .from('room_types')
-      .select('id, name, description, base_price, capacity')
+      .select('id, name, description, base_price, capacity, room_type_images(id, image_url, sort_order)')
       .order('base_price')
       .limit(6)
     return (data as RoomType[]) ?? []
@@ -113,7 +115,7 @@ export default async function HomePage() {
                 >
                   {/* Photo */}
                   <img
-                    src={ROOM_IMAGES[rt.name] ?? FALLBACK}
+                    src={rt.room_type_images?.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))[0]?.image_url ?? ROOM_IMAGES[rt.name] ?? FALLBACK}
                     alt={rt.name}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
