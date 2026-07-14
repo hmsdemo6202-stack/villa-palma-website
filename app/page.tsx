@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 import AvailabilitySection from '@/components/AvailabilitySection'
-import HeroCarousel, { HeroSlide } from '@/components/HeroCarousel'
+import HeroCarousel from '@/components/HeroCarousel'
 import Link from 'next/link'
 import { getSiteSettings } from '@/lib/supabase/siteSettings'
 
@@ -44,39 +44,19 @@ async function getFeaturedRoomTypes(): Promise<RoomType[]> {
 const HERO_FALLBACK = 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=80'
 const CTA_FALLBACK  = 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80'
 
-async function getHeroSlides(): Promise<HeroSlide[]> {
-  try {
-    const supabase = createClient()
-    const { data } = await supabase
-      .from('hero_slides')
-      .select('id, image_url, title, subtitle')
-      .eq('is_active', true)
-      .order('sort_order')
-    return (data as HeroSlide[]) ?? []
-  } catch {
-    return []
-  }
-}
-
 export default async function HomePage() {
-  const [roomTypes, siteSettings, heroSlides] = await Promise.all([
+  const [roomTypes, siteSettings] = await Promise.all([
     getFeaturedRoomTypes(),
-    getSiteSettings(['hero_image_url', 'cta_image_url']),
-    getHeroSlides(),
+    getSiteSettings(['cta_image_url']),
   ])
   const ctaImage = siteSettings['cta_image_url'] || CTA_FALLBACK
-
-  // Fall back to single site_settings image if no slides in DB yet
-  const slides: HeroSlide[] = heroSlides.length > 0
-    ? heroSlides
-    : [{ id: 'fallback', image_url: siteSettings['hero_image_url'] || HERO_FALLBACK, title: null, subtitle: null }]
 
   return (
     <>
       <SiteNav />
 
-      {/* ── Hero Slideshow ── */}
-      <HeroCarousel slides={slides} />
+      {/* ── Hero Slideshow — fetches live from Supabase client-side ── */}
+      <HeroCarousel />
 
       {/* ── Stats strip ── */}
       <section className="bg-white border-y border-warm-border">

@@ -1,16 +1,29 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 
-export interface HeroSlide {
-  id: string
-  image_url: string
-  title: string | null
-  subtitle: string | null
-}
+const HERO_FALLBACK = 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=80'
 
-export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
+interface Slide { id: string; image_url: string; title: string | null; subtitle: string | null }
+
+export default function HeroCarousel() {
+  const [slides,  setSlides]  = useState<Slide[]>([])
   const [current, setCurrent] = useState(0)
+  const [ready,   setReady]   = useState(false)
+
+  useEffect(() => {
+    createClient()
+      .from('hero_slides')
+      .select('id, image_url, title, subtitle')
+      .eq('is_active', true)
+      .order('sort_order')
+      .then(({ data }) => {
+        const rows = (data as Slide[]) ?? []
+        setSlides(rows.length > 0 ? rows : [{ id: 'fallback', image_url: HERO_FALLBACK, title: null, subtitle: null }])
+        setReady(true)
+      })
+  }, [])
 
   const next = useCallback(() => setCurrent(i => (i + 1) % slides.length), [slides.length])
   const prev = () => setCurrent(i => (i - 1 + slides.length) % slides.length)
@@ -21,6 +34,9 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
     return () => clearInterval(t)
   }, [next, slides.length])
 
+  if (!ready) return (
+    <section className="relative min-h-[92vh] flex items-center justify-center" style={{ backgroundColor: '#1a0e08' }} />
+  )
   if (slides.length === 0) return null
 
   return (
