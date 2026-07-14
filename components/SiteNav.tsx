@@ -178,7 +178,7 @@ export default function SiteNav() {
         <button
           onClick={() => setOpen(v => !v)}
           className="lg:hidden p-1.5"
-          style={{ color: '#7a5a4a' }}
+          style={{ color: '#b09080' }}
           aria-label="Toggle menu"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

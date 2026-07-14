@@ -67,14 +67,17 @@ export default function RoomsPage() {
 
   const loadAllRooms = useCallback(async () => {
     setLoading(true)
-    const supabase = createClient()
-    // Query room_types directly so all 8 types always show regardless of room unit status
-    const { data } = await supabase
-      .from('room_types')
-      .select('id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order)')
-      .order('base_price')
-    setRooms(roomTypesToGrouped((data as unknown as RoomType[]) ?? []) as unknown as Room[])
-    setLoading(false)
+    try {
+      const supabase = createClient()
+      // Query room_types directly so all 8 types always show regardless of room unit status
+      const { data } = await supabase
+        .from('room_types')
+        .select('id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order)')
+        .order('base_price')
+      setRooms(roomTypesToGrouped((data as unknown as RoomType[]) ?? []) as unknown as Room[])
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => { loadAllRooms() }, [loadAllRooms])
