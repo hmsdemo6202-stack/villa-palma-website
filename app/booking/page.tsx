@@ -86,16 +86,30 @@ function BookingContent() {
       guestId = newGuest.id
     }
 
-    // Find a room of this type
-    const { data: roomRows } = await supabase
+    // Find all rooms of this type, then exclude any with date conflicts
+    const { data: allRooms } = await supabase
       .from('rooms')
       .select('id')
       .eq('room_type_id', roomTypeId)
-      .limit(1)
 
-    const roomId = roomRows?.[0]?.id
-    if (!roomId) {
+    if (!allRooms || allRooms.length === 0) {
       setError('No rooms found for this type. Please contact us directly.')
+      setSubmitting(false)
+      return
+    }
+
+    const { data: conflicts } = await supabase
+      .from('reservations')
+      .select('room_id')
+      .in('status', ['inquiry', 'pending', 'confirmed', 'checked_in'])
+      .lt('check_in_date', checkOut)
+      .gt('check_out_date', checkIn)
+
+    const conflictIds = new Set((conflicts ?? []).map((c: { room_id: string }) => c.room_id))
+    const roomId = allRooms.find(r => !conflictIds.has(r.id))?.id
+
+    if (!roomId) {
+      setError('No rooms are available for your selected dates. Please try different dates or contact us directly.')
       setSubmitting(false)
       return
     }
@@ -113,6 +127,9 @@ function BookingContent() {
         total_amount: total,
         status: 'inquiry',
         special_requests: form.special_requests.trim() || null,
+        arrival_time: form.arrival_time || null,
+        adults,
+        children,
       })
       .select('id')
       .single()
