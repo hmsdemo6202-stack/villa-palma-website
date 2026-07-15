@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import RetryImg from '@/components/RetryImg'
 
 interface PosCategory { id: string; name: string }
 interface PosItem {
@@ -105,7 +106,7 @@ export default async function RestaurantPage() {
                         <div key={item.id} className="flex gap-4 bg-white border border-warm-border rounded-xl p-4">
                           {item.image_url && (
                             <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0">
-                              <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+                              <RetryImg src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">

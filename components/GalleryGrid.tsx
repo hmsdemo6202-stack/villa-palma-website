@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import RetryImg from '@/components/RetryImg'
 
 interface GalleryItem {
   id: string
@@ -31,7 +32,7 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
         {visible.map(item => (
           <div key={item.id} className="break-inside-avoid rounded-xl overflow-hidden border border-warm-border group">
             <div className="relative overflow-hidden bg-[#f5ede4]">
-              <img
+              <RetryImg
                 src={item.image_url}
                 alt={item.title ?? 'Hotel photo'}
                 loading="lazy"

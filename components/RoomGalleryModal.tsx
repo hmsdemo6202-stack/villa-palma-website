@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react'
+import RetryImg from '@/components/RetryImg'
 
 export type GalleryPhoto = { id: string; image_url: string; alt_text?: string | null; sort_order?: number }
 
@@ -147,7 +148,7 @@ export default function RoomGalleryModal({
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
-          <img
+          <RetryImg
             src={photos[index].image_url}
             alt={photos[index].alt_text ?? roomTypeName}
             draggable={false}
@@ -176,7 +177,7 @@ export default function RoomGalleryModal({
                 onClick={() => { setIndex(i); resetZoom() }}
                 className={`shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 ${i === index ? 'border-terra' : 'border-transparent opacity-70'}`}
               >
-                <img src={p.image_url} alt="" className="w-full h-full object-cover" />
+                <RetryImg src={p.image_url} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>

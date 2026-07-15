@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import RoomGalleryModal, { GalleryPhoto } from '@/components/RoomGalleryModal'
 import GuestCounter from '@/components/GuestCounter'
 import Link from 'next/link'
+import RetryImg from '@/components/RetryImg'
 
 const ROOM_IMAGES: Record<string, string> = {
   'Single Room':         'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=600&q=80',
@@ -215,7 +216,7 @@ export default function RoomsPage() {
               {roomTypes.map(type => (
                 <div key={type.id} className="bg-white rounded-2xl border border-warm-border overflow-hidden hover:border-terra transition-colors group">
                   <div className="relative h-48 overflow-hidden">
-                    <img
+                    <RetryImg
                       src={type.room_type_images?.[0]?.image_url ?? ROOM_IMAGES[type.name] ?? FALLBACK}
                       alt={type.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

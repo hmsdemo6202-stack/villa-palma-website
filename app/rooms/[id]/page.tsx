@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 import RoomGalleryModal, { GalleryPhoto } from '@/components/RoomGalleryModal'
+import RetryImg from '@/components/RetryImg'
 import Link from 'next/link'
 
 const ROOM_IMAGES: Record<string, string> = {
@@ -127,7 +128,7 @@ export default function RoomDetailPage() {
 
       {/* Hero */}
       <div className="relative h-[55vh] overflow-hidden">
-        <img src={heroImage} alt={roomType.name} className="w-full h-full object-cover" />
+        <RetryImg src={heroImage} alt={roomType.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0"
           style={{ background: 'linear-gradient(to bottom, rgba(26,14,8,0.25) 0%, rgba(26,14,8,0.75) 100%)' }} />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-5xl mx-auto w-full">
@@ -191,7 +192,7 @@ export default function RoomDetailPage() {
                       <button key={img.id} onClick={() => setGalleryOpen(true)}
                         className="relative overflow-hidden rounded-xl group"
                         style={{ aspectRatio: '16/9' }}>
-                        <img src={img.image_url} alt={img.alt_text ?? roomType.name}
+                        <RetryImg src={img.image_url} alt={img.alt_text ?? roomType.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                         {i === 5 && sortedImages.length > 6 && (
                           <div className="absolute inset-0 bg-[#0000007a] flex items-center justify-center">

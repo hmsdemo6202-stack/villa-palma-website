@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
+import RetryImg from '@/components/RetryImg'
 
 interface PosCategory { id: string; name: string; sort_order: number }
 interface PosItem {
@@ -262,7 +263,7 @@ export default function RestaurantOrderPage() {
                         <div className="flex gap-3">
                           {item.image_url && (
                             <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0">
-                              <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+                              <RetryImg src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">

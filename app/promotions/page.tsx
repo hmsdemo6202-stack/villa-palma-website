@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import SiteNav from '@/components/SiteNav'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import RetryImg from '@/components/RetryImg'
 
 interface Promotion {
   id: string
@@ -75,7 +76,7 @@ export default async function PromotionsPage() {
                 <div key={p.id} className="bg-white rounded-2xl border border-warm-border overflow-hidden group hover:border-terra transition-colors">
                   {p.image_url ? (
                     <div className="h-44 overflow-hidden">
-                      <img src={p.image_url} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <RetryImg src={p.image_url} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   ) : (
                     <div className="h-20 bg-[#f5ede4] flex items-center justify-center">
