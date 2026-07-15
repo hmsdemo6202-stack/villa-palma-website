@@ -86,28 +86,33 @@ export default function RoomsPage() {
     if (!checkIn || !checkOut) return
     setLoading(true)
     setSearched(true)
-    const supabase = createClient()
+    try {
+      const supabase = createClient()
 
-    const { data: conflicts } = await supabase
-      .from('reservations')
-      .select('room_id')
-      .not('status', 'in', '("cancelled","no_show")')
-      .lt('check_in_date', checkOut)
-      .gt('check_out_date', checkIn)
+      const { data: conflicts } = await supabase
+        .from('reservations')
+        .select('room_id')
+        .in('status', ['inquiry', 'pending', 'confirmed', 'checked_in'])
+        .lt('check_in_date', checkOut)
+        .gt('check_out_date', checkIn)
 
-    const bookedIds = (conflicts ?? []).map((r: { room_id: string }) => r.room_id)
+      const bookedIds = (conflicts ?? []).map((r: { room_id: string }) => r.room_id)
 
-    let query = supabase
-      .from('rooms')
-      .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order))')
-      .eq('status', 'available')
-      .gte('room_types.capacity', adults + children)
+      let query = supabase
+        .from('rooms')
+        .select('id, room_number, floor, status, room_types!inner(id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order))')
+        .eq('status', 'available')
+        .gte('room_types.capacity', adults + children)
 
-    if (bookedIds.length > 0) query = query.not('id', 'in', `(${bookedIds.join(',')})`)
+      if (bookedIds.length > 0) query = query.not('id', 'in', `(${bookedIds.join(',')})`)
 
-    const { data } = await query.order('room_number')
-    setRooms((data as unknown as Room[]) ?? [])
-    setLoading(false)
+      const { data } = await query.order('room_number')
+      setRooms((data as unknown as Room[]) ?? [])
+    } catch {
+      setRooms([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   function clearSearch() {

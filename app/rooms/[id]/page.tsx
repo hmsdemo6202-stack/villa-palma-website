@@ -46,22 +46,27 @@ export default function RoomDetailPage() {
   useEffect(() => {
     if (!id) return
     async function load() {
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('room_types')
-        .select('id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order)')
-        .eq('id', id)
-        .single()
-      if (error || !data) { setNotFound(true); setLoading(false); return }
-      setRoomType(data as unknown as RoomType)
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from('room_types')
+          .select('id, name, description, base_price, capacity, room_type_images(id, image_url, alt_text, sort_order)')
+          .eq('id', id)
+          .single()
+        if (error || !data) { setNotFound(true); return }
+        setRoomType(data as unknown as RoomType)
 
-      const { count } = await supabase
-        .from('rooms')
-        .select('*', { count: 'exact', head: true })
-        .eq('room_type_id', id)
-        .eq('status', 'available')
-      setAvailableCount(count ?? 0)
-      setLoading(false)
+        const { count } = await supabase
+          .from('rooms')
+          .select('*', { count: 'exact', head: true })
+          .eq('room_type_id', id)
+          .eq('status', 'available')
+        setAvailableCount(count ?? 0)
+      } catch {
+        setNotFound(true)
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [id])
